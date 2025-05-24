@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DopplerSense</title>
+  <link rel="icon" href="static/img/DopplerSense_Icon.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- [START] Jumbotron -->
+  <div class="container min-h-screen lg:min-h-screen bg-[url('/static/img/Banner.png')] bg-center bg-cover px-10 py-5">
+    <!-- [START] Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent">
+
+      <div class="flex items-center justify-between py-5 px-10 w-full">
+        <!-- [START] Logo -->
+        <div class="flex items-center space-x-2 lg:space-x-4">
+          <img src="static/img/Logo_USU.png" alt="Logo USU" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+          <img src="static/img/Logo_RSUP_Adam_Malik.png" alt="Logo RSUP Adam Malik" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+          <img src="static/img/DopplerSense_Icon_wo.png" alt="Logo DopplerSense" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+        </div>
+        <!-- [END] Logo -->
+
+        <!-- [START] Menu (Desktop) -->
+        <ul id="menu-list" class="hidden lg:flex flex-1 justify-end space-x-10">
+          <li><a href="{{url_for('home')}}" class="font-medium text-white px-3 py-2 rounded-[20px] bg-[#407CB9] outline outline-2 outline-white">Beranda</a></li>
+          <li><a href="{{url_for('detection')}}" class="font-medium text-white px-3 py-2 rounded-[20px] bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white">Deteksi Penyakit Katup</a></li>
+          <li><a href="{{url_for('about')}}" class="font-medium text-white px-3 py-2 rounded-[20px] bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white">Tentang Kami</a></li>
+          <li><a href="{{url_for('logout')}}" class="font-medium text-white px-3 py-2 rounded-[20px] bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white">Logout</a></li>
+        </ul>
+        <!-- [END] Menu (Desktop) -->
+
+        <!-- [START] Hamburger Menu (Mobile) -->
+        <button id="menu-button" class="lg:hidden text-white text-3xl focus:outline-none ml-auto">
+          ☰
+        </button>
+        <!-- [END] Hamburger Menu (Mobile) -->
+      </div>
+
+      <!-- [START] Mobile Menu -->
+      <ul id="mobile-menu" class="hidden flex-col items-center bg-[#407CB9] text-white space-y-4 py-4 px-6 mt-4 lg:hidden absolute top-[70px] left-1/2 transform -translate-x-1/2 rounded-[20px] w-[90%] max-w-[300px] shadow-lg">
+        <li class="w-full text-center">
+          <a href="{{url_for('home')}}" class="block px-4 py-2 rounded-[20px] bg-[#407CB9] outline outline-2 outline-white w-full">Beranda</a>
+        </li>
+        <li class="w-full text-center">
+          <a href="{{url_for('detection')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Deteksi Penyakit Katup</a>
+        </li>
+        <li class="w-full text-center">
+          <a href="{{url_for('about')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Tentang Kami</a>
+        </li>
+        <li class="w-full text-center">
+          <a href="{{url_for('logout')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Logout</a>
+        </li>
+      </ul>
+      <!-- [END] Mobile Menu -->
+    </nav>
+    <!-- [END] NAVBAR -->
+
+    <!--  [START] Penjelasan  -->
+    <div class="text-white lg:mt-40 mt-28 max-w-xl mb-10">
+      <h1 class="lg:text-4xl text-2xl text-justify font-semibold leading-normal">
+        Selamat Datang di Sistem Klasifikasi Kelainan Katup Jantung
+      </h1>
+      <p class="lg:text-base text-sm text-justify font-normal lg:mt-4 mt-12">
+        Analisis video ekokardiografi kini lebih cerdas dan cepat. DopplerSense membantu mendeteksi kelainan katup mitral secara otomatis dengan dukungan teknologi AI terkini.
+      </p>
+      <a href="{{url_for('detection')}}" class="mt-5 inline-block bg-[#407CB9] text-white text-center font-semibold px-6 py-3 rounded-[20px] hover:outline hover:outline-2 hover:outline-white lg:mt-4 mt-12">
+        Mulai Deteksi Penyakit Katup
+      </a>
+    </div>
+    <!--  [END] Penjelasan  -->
+  </div>
+  <!-- [END] Jumbotron  -->
+
+
+  <!-- [START] Section "Mengapa Memilih Kami?" -->
+  <div class="w-[100%] mx-auto bg-white rounded-lg shadow-lg min-h-fit">
+    <h2 class="bg-[#407CB9] text-xl md:text-3xl font-bold text-center md:text-right text-white mb-6 px-10 py-5">
+      Mengapa Memilih Kami?
+    </h2>
+
+    <div class="flex flex-col md:flex-row items-center md:items-center gap-6 px-10 py-5">
+      <!-- [START] Bagian Gambar -->
+      <div class="w-full md:w-1/2 flex items-center justify-center">
+        <img src="static/img/Mengapa.png" alt="Keunggulan Kami" class="w-full rounded-lg shadow-md">
+      </div>
+      <!-- [END] Bagian Gambar -->
+
+      <!-- [START] Bagian Kotak Penjelasan -->
+      <div class="w-full md:w-1/2 space-y-4">
+        <div class="bg-[#407CB9] text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-base lg:text-lg font-semibold">1. Analisis Berbasis AI</h3>
+        </div>
+        <div class="bg-[#407CB9] text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-base lg:text-lg font-semibold">2. Seleksi Frame Informatif</h3>
+        </div>
+        <div class="bg-[#407CB9] text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-base lg:text-lg font-semibold">3. Visualisasi Prediktif</h3>
+        </div>
+        <div class="bg-[#407CB9] text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-base lg:text-lg font-semibold">4. Akses Fleksibel</h3>
+        </div>
+        <div class="bg-[#407CB9] text-white p-4 rounded-lg shadow-md">
+          <h3 class="text-base lg:text-lg font-semibold">5. Validasi dengan Cross-Validation</h3>
+        </div>
+      </div>
+      <!-- [END] Bagian Kotak Penjelasan -->
+    </div>
+  </div>
+  <!-- [END] Section "Mengapa Memilih Kami?" -->
+
+
+  <!-- [START] Section "Testimoni Pengguna" -->
+  <div class="w-[100%] mx-auto bg-white rounded-lg shadow-lg min-h-fit">
+    <h2 class="bg-[#407CB9] text-xl lg:text-3xl font-bold text-center md:text-left text-white mb-5 px-10 py-5">
+      Testimoni Pengguna
+    </h2>
+
+    <!-- [START] Container Foto Testimoni -->
+    <div class="flex justify-center gap-6 px-16 py-5">
+      <img src="static/img/Testimoni 1.png" alt="Testimoni 1" class="w-1/3 rounded-lg shadow-md">
+      <img src="static/img/Testimoni 2.png" alt="Testimoni 2" class="w-1/3 rounded-lg shadow-md">
+      <img src="static/img/Testimoni 3.png" alt="Testimoni 3" class="w-1/3 rounded-lg shadow-md">
+    </div>
+    <!-- [END] Container Foto Testimoni -->
+  </div>
+  <!-- [END] Section "Testimoni Pengguna" -->
+
+  <!-- [START] Footer -->
+  <p class="bg-[#407CB9] text-base lg:text-lg font-bold text-center text-white px-10 py-5">DopplerSense</p>
+  <!-- [END] Footer -->
+
+
+  <script>
+    document.getElementById("menu-button").addEventListener("click", function () {
+        let mobileMenu = document.getElementById("mobile-menu");
+        mobileMenu.classList.toggle("hidden");
+    });
+
+    window.addEventListener("click", function (e) {
+        let menu = document.getElementById("mobile-menu");
+        let button = document.getElementById("menu-button");
+        if (!menu.contains(e.target) && !button.contains(e.target)) {
+            menu.classList.add("hidden");
+        }
+    });
+
+    window.addEventListener("scroll", function () {
+        const navbar = document.getElementById("navbar");
+        const menuButton = document.getElementById("menu-button");
+
+        if (window.scrollY > 30) {
+            navbar.classList.add("bg-[#407CB9]/30", "backdrop-blur-md");
+            navbar.classList.remove("bg-transparent");
+        } else {
+            navbar.classList.add("bg-transparent");
+            navbar.classList.remove("bg-[#407CB9]/30", "backdrop-blur-md");
+        }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DopplerSense</title>
+  <link rel="icon" href="static/img/DopplerSense_Icon.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+  <script>
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.add('text-[#407cb9]');
+        eyeIcon.classList.remove('text-gray-500');
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('text-[#407cb9]');
+        eyeIcon.classList.add('text-gray-500');
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen w-full bg-gray-100 font-[Montserrat]">
+    <div class="relative flex flex-col md:flex-row w-full h-screen bg-white shadow-2xl">
+      <!-- Left side (Image) -->
+      <div class="relative w-full md:w-1/2 h-1/3 md:h-full">
+        <img src="static/img/ekokardiografi.png" alt="Ekokardiografi" class="w-full h-full object-cover" />
+        <!-- Teks di bawah gambar -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 p-2 bg-white bg-opacity-40 backdrop-blur-sm rounded drop-shadow-lg text-center w-[90%] sm:w-auto">
+          <span class="text-slate-800 text-sm sm:text-lg md:text-2xl font-semibold">
+            Setiap detak jantung memiliki cerita.
+          </span>
+        </div>
+      </div>
+
+
+      <!-- Right side (Login Form) -->
+      <div class="flex flex-col justify-center items-center w-full md:w-1/2 p-6 md:p-14">
+        <!-- Logo -->
+        <div class="flex justify-center items-center flex-wrap space-x-4 mb-6">
+          <img src="static/img/Logo_USU_Horizontal.png" alt="Logo USU" class="h-[25px] lg:h-[45px]" style="width: auto;">
+          <img src="static/img/Logo_RSUP_Adam_Malik.png" alt="Logo RSUP Adam Malik" class="h-[25px] lg:h-[45px]" style="width: auto;">
+          <img src="static/img/DopplerSense_Icon_wo.png" alt="Logo DopplerSense" class="h-[25px] lg:h-[45px]" style="width: auto;">
+        </div>
+
+        <form method="post" action="" class="w-full max-w-md">
+          {{ form.hidden_tag() }}
+          <span class="mb-3 text-2xl md:text-4xl font-bold text-center block">Masuk ke Akun</span>
+
+          <div class="py-4">
+            <label class="block mb-2 text-lg md:text-xl font-medium">Nama Pengguna</label>
+            {{ form.username(class="w-full p-3 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500 text-md md:text-lg focus:text-md md:focus:text-lg") }}
+          </div>
+
+          <div class="py-4">
+            <label class="block mb-2 text-lg md:text-xl">Kata Sandi</label>
+            <div class="relative">
+              {{ form.password(class="w-full p-3 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500 text-md md:text-lg focus:text-md md:focus:text-lg") }}
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onclick="togglePasswordVisibility()">
+                <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-eye-fill text-gray-500" viewBox="0 0 16 16">
+                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <!-- Kotak Centang Remember Me -->
+          <div class="py-2">
+              <div class="flex items-center">
+                  {{ form.remember_me(class="form-checkbox h-4 w-4 text-green-500 transition duration-150 ease-in-out") }}
+                  {{ form.remember_me.label(class="ml-2 block text-sm leading-5 text-gray-900") }}
+              </div>
+          </div>
+
+          <div class="py-4">
+            {{ form.submit(class="w-full p-3 text-white bg-[#407cb9] rounded-md border-2 hover:border-[#407cb9] hover:bg-white hover:text-[#407cb9] cursor-pointer") }}
+          </div>
+
+          <p class="mt-4 text-center text-lg">
+            Don't have an account? <a style="text-decoration:none" class="font-bold text-[#407cb9] hover:underline" href="{{ url_for('register') }}">Register</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

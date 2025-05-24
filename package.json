@@ -1,0 +1,19 @@
+{
+  "name": "echowebapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tailwind": "npx @tailwindcss/cli -i ./static/src/input.css -o ./static/css/output.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "tailwindcss": "^4.0.15"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.15"
+  }
+}

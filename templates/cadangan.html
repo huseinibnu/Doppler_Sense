@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DopplerSense</title>
+  <link rel="icon" href="static/img/DopplerSense_Icon.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+  <div class="flex-grow">
+    <!-- Jumbotron -->
+    <div class="container bg-white bg-center bg-cover px-5 py-5 pt-[40px]">
+      <!-- NAVBAR -->
+      <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent">
+        <div class="flex items-center justify-between py-5 px-10 w-full">
+          <!-- Logo -->
+          <div class="flex items-center space-x-4">
+            <img src="static/img/Logo_USU.png" alt="Logo USU" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+            <img src="static/img/Logo_RSUP_Adam_Malik.png" alt="Logo RSUP Adam Malik" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+            <img src="static/img/DopplerSense_Icon_wo.png" alt="Logo DopplerSense" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+          </div>
+          <!-- Logo -->
+
+          <!-- Menu (Desktop) -->
+          <ul id="menu-list" class="hidden lg:flex flex-1 justify-end space-x-10">
+            <li><a href="{{url_for('home')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white hover:outline hover:outline-2 hover:outline-[#407CB9]">Beranda</a></li>
+            <li><a href="{{url_for('detection')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white outline outline-2 outline-[#407CB9]">Deteksi Penyakit Katup</a></li>
+            <li><a href="{{url_for('about')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white hover:outline hover:outline-2 hover:outline-[#407CB9]">Tentang Kami</a></li>
+            <li><a href="{{url_for('logout')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white hover:outline hover:outline-2 hover:outline-[#407CB9]">Logout</a></li>
+          </ul>
+          <!-- Menu (Desktop) -->
+
+          <!-- Hamburger Menu (Mobile) -->
+          <button id="menu-button" class="lg:hidden text-[#407CB9] text-3xl focus:outline-none ml-auto bg-white">
+            ☰
+          </button>
+          <!-- Hamburger Menu (Mobile) -->
+        </div>
+
+        <!-- Mobile Menu -->
+        <ul id="mobile-menu" class="hidden flex-col items-center bg-[#407CB9] text-white space-y-4 py-4 px-6 mt-4 lg:hidden absolute top-[70px] left-1/2 transform -translate-x-1/2 rounded-[20px] w-[90%] max-w-[300px] shadow-lg">
+          <li class="w-full text-center">
+            <a href="{{url_for('home')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Beranda</a>
+          </li>
+          <li class="w-full text-center">
+            <a href="{{url_for('detection')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] outline outline-2 outline-white w-full">Deteksi Penyakit Katup</a>
+          </li>
+          <li class="w-full text-center">
+            <a href="{{url_for('about')}}" class="block px-4 py-2 rounded-[20px] bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Tentang Kami</a>
+          </li>
+          <li class="w-full text-center">
+            <a href="{{url_for('logout')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Logout</a>
+          </li>
+        </ul>
+        <!-- Mobile Menu -->
+      </nav>
+      <!-- NAVBAR -->
+
+      <!-- Bagian Upload & Preview Video -->
+      <div class="container mx-auto px-5 py-16 mt-4">
+        <!-- Judul -->
+        <h1 id="uploadTitle" class="lg:text-4xl text-2xl font-bold text-center text-black mb-6">
+          Unggah Video Ekokardiografi Doppler
+        </h1>
+        <!-- Judul -->
+
+        <!-- Wrapper Utama -->
+        <div class="flex flex-col items-center justify-center w-full"> <!--  aspect-[3/3] lg:h-[calc(100vh-220px)] -->
+          <form id="uploadForm" action="/detection" method="POST" enctype="multipart/form-data">
+            <!-- Kotak Upload -->
+            <div id="uploadBox" class="w-full h-full rounded-[25px] shadow-2xl border-2 border-[#407CB9] bg-white flex items-center justify-center p-4 md:p-6">
+              <label for="videoUpload" class="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                <img src="{{ url_for('static', filename='img/Video_Upload_Icon.png') }}" alt="Upload Icon" class="w-20 md:w-28">
+                <span class="text-gray-500 mt-2 text-sm md:text-lg font-base drop-shadow-lg text-center">
+                  Telusuri video ekokardiografi Doppler Anda dengan mengklik logo upload
+                </span>
+                <span class="text-red-500 italic text-xs md:text-sm mt-1 text-center">
+                  (*hanya menerima format MP4, AVI, MOV)
+                </span>
+              </label>
+
+                <input id="videoUpload" type="file" name="videofile" accept="video/mp4,video/x-msvideo,video/quicktime"
+                       class="hidden" >
+  <!--              onchange="handleFileSelect(event)"-->
+
+            </div>
+            <!-- Kotak Upload -->
+
+            <!-- Preview Video -->
+            <div id="previewContainer" class="hidden w-full h-full flex flex-col items-center justify-center mt-4">
+              <video id="videoPreview" controls autoplay loop muted
+                     class="rounded-[25px] shadow-2xl w-full max-w-full md:max-w-[80%] lg:max-w-[50%] max-h-[60vh] object-contain bg-black mx-auto">
+              </video>
+
+              <!-- Tombol Aksi -->
+              <div class="mt-6 flex flex-col items-center space-y-3">
+                <button type="submit" form="uploadForm" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white outline outline-2 outline-[#407CB9] hover:bg-[#407CB9] hover:text-white shadow-lg transition cursor-pointer">Lanjut Deteksi</button>
+                <button class="text-sm text-blue-600 hover:underline cursor-pointer" onclick="resetUpload()">Ganti Video</button>
+              </div>
+              <!-- Tombol Aksi -->
+
+              <!-- STEP PROGRESS -->
+              <div id="stepProgress" class="mt-8 w-full max-w-md hidden">
+                <h3 class="text-lg font-semibold mb-4 text-center">Status Proses Deteksi</h3>
+                <ol class="relative border-l border-gray-300">
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-1">1</span>
+                    <h3 class="font-medium leading-tight" id="step-text-1">Normalisasi FPS (30 fps)</h3>
+                  </li>
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-2">2</span>
+                    <h3 class="font-medium leading-tight" id="step-text-2">Enhance Kontras</h3>
+                  </li>
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-3">3</span>
+                    <h3 class="font-medium leading-tight" id="step-text-3">Enhance Doppler & Konversi Frame</h3>
+                  </li>
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-4">4</span>
+                    <h3 class="font-medium leading-tight" id="step-text-4">Preprocessing (ConvNeXt)</h3>
+                  </li>
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-5">5</span>
+                    <h3 class="font-medium leading-tight" id="step-text-5">Ekstraksi Fitur Latent</h3>
+                  </li>
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-6">6</span>
+                    <h3 class="font-medium leading-tight" id="step-text-6">Seleksi Top-K Frame</h3>
+                  </li>
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-7">7</span>
+                    <h3 class="font-medium leading-tight" id="step-text-7">Klasifikasi dengan CNN-BiLSTM</h3>
+                  </li>
+                  <li class="mb-10 ml-6">
+                    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white bg-gray-300 text-gray-600" id="step-icon-8">8</span>
+                    <h3 class="font-medium leading-tight" id="step-text-8">Hasil Diagnostik</h3>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <!-- Preview Video -->
+
+          </form>
+        </div>
+        <!-- Wrapper Utama -->
+      </div>
+      <!-- Bagian Upload & Preview Video -->
+
+    </div>
+    <!-- Jumbotron  -->
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-[#407CB9] text-base lg:text-lg font-bold text-center text-white px-10 py-5">
+    DopplerSense
+  </footer>
+  <!-- Footer -->
+
+
+<script>
+  document.getElementById("menu-button").addEventListener("click", function () {
+      let mobileMenu = document.getElementById("mobile-menu");
+      mobileMenu.classList.toggle("hidden");
+  });
+
+  window.addEventListener("click", function (e) {
+      let menu = document.getElementById("mobile-menu");
+      let button = document.getElementById("menu-button");
+      if (!menu.contains(e.target) && !button.contains(e.target)) {
+          menu.classList.add("hidden");
+      }
+  });
+
+  window.addEventListener("scroll", function () {
+      const navbar = document.getElementById("navbar");
+      const menuButton = document.getElementById("menu-button");
+
+      if (window.scrollY > 30) {
+          navbar.classList.add("bg-[#407CB9]/30", "backdrop-blur-md");
+          navbar.classList.remove("bg-transparent");
+
+          // Hapus bg-white dari hamburger menu
+          menuButton.classList.remove("bg-white");
+      } else {
+          navbar.classList.add("bg-transparent");
+          navbar.classList.remove("bg-[#407CB9]/30", "backdrop-blur-md");
+
+          // Tambahkan bg-white kembali ke hamburger menu
+          menuButton.classList.add("bg-white");
+      }
+  });
+</script>
+
+
+<script>
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const video = document.getElementById('videoPreview');
+      const previewContainer = document.getElementById('previewContainer');
+      const uploadBox = document.getElementById('uploadBox');
+      const title = document.getElementById('uploadTitle');
+
+      // Ganti source video
+      const videoURL = URL.createObjectURL(file);
+      video.src = videoURL;
+
+      // Ubah tampilan
+      uploadBox.classList.add('hidden');
+      previewContainer.classList.remove('hidden');
+      title.textContent = "Pratinjau Video";
+    }
+  }
+
+  function resetUpload() {
+    const input = document.getElementById('videoUpload');
+    const video = document.getElementById('videoPreview');
+    const previewContainer = document.getElementById('previewContainer');
+    const uploadBox = document.getElementById('uploadBox');
+    const stepProgress = document.getElementById('stepProgress');
+    const title = document.getElementById('uploadTitle');
+
+    input.value = "";
+    video.pause();
+    video.src = "";
+    previewContainer.classList.add('hidden');
+    uploadBox.classList.remove('hidden');
+    stepProgress.classList.add('hidden');
+    title.textContent = "Unggah Video Ekokardiografi Doppler";
+
+    // Reset semua step icon ke pending (abu-abu)
+    for (let i=1; i<=8; i++) {
+      updateStepStatus(i, 'pending');
+    }
+  }
+
+  function updateStepStatus(stepNumber, status) {
+    const icon = document.getElementById(`step-icon-${stepNumber}`);
+    if (!icon) return;
+
+    icon.className = 'flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white';
+
+    if (status === 'pending') {
+      icon.classList.add('bg-gray-300', 'text-gray-600');
+      icon.textContent = stepNumber;
+    } else if (status === 'loading') {
+      icon.classList.add('bg-yellow-400', 'animate-pulse', 'text-white');
+      icon.innerHTML = `<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M4 4v5h.582m15.356 2A9 9 0 114 8v5h.582"></path></svg>`;
+    } else if (status === 'success') {
+      icon.classList.add('bg-green-500', 'text-white');
+      icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M5 13l4 4L19 7"></path></svg>`;
+    } else if (status === 'error') {
+      icon.classList.add('bg-red-500', 'text-white');
+      icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"></path></svg>`;
+    }
+  }
+
+  function startDetection() {
+    // Tampilkan step progress
+    document.getElementById('stepProgress').classList.remove('hidden');
+
+    // Reset semua step ke pending
+    for (let i=1; i<=8; i++) {
+      updateStepStatus(i, 'pending');
+    }
+
+    // Contoh simulasi progress (update tiap 1.5 detik)
+    let currentStep = 1;
+    function simulateProgress() {
+      if (currentStep > 8) return;
+
+      updateStepStatus(currentStep, 'loading');
+      setTimeout(() => {
+        updateStepStatus(currentStep, 'success');
+        currentStep++;
+        simulateProgress();
+      }, 1500);
+    }
+    simulateProgress();
+
+    // TODO: hubungkan ke backend / API supaya step sesuai proses asli
+  }
+</script>
+
+
+</body>
+</html>

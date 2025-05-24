@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DopplerSense</title>
+  <link rel="icon" href="static/img/DopplerSense_Icon.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .spinner {
+    border: 2px solid transparent;
+    border-top: 2px solid #407CB9;
+    border-radius: 9999px;
+    width: 1rem;
+    height: 1rem;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+  }
+
+  .predict-button:hover .spinner {
+    border-top-color: white;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+  <div class="flex-grow">
+
+    <!-- [START] Jumbotron -->
+    <div class="container bg-white bg-center bg-cover px-5 py-5 pt-[40px]">
+
+      <!-- [START] Navbar -->
+      <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent">
+        <div class="flex items-center justify-between py-5 px-10 w-full">
+          <!-- Logo -->
+          <div class="flex items-center space-x-4">
+            <img src="static/img/Logo_USU.png" alt="Logo USU" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+            <img src="static/img/Logo_RSUP_Adam_Malik.png" alt="Logo RSUP Adam Malik" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+            <img src="static/img/DopplerSense_Icon_wo.png" alt="Logo DopplerSense" class="h-[30px] lg:h-[50px] cursor-pointer" style="width: auto;">
+          </div>
+          <!-- Logo -->
+
+          <!-- Menu (Desktop) -->
+          <ul id="menu-list" class="hidden lg:flex flex-1 justify-end space-x-10">
+            <li><a href="{{url_for('home')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white hover:outline hover:outline-2 hover:outline-[#407CB9]">Beranda</a></li>
+            <li><a href="{{url_for('detection')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white outline outline-2 outline-[#407CB9]">Deteksi Penyakit Katup</a></li>
+            <li><a href="{{url_for('about')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white hover:outline hover:outline-2 hover:outline-[#407CB9]">Tentang Kami</a></li>
+            <li><a href="{{url_for('logout')}}" class="font-medium text-[#407CB9] px-3 py-2 rounded-[20px] bg-white hover:outline hover:outline-2 hover:outline-[#407CB9]">Logout</a></li>
+          </ul>
+          <!-- Menu (Desktop) -->
+
+          <!-- Hamburger Menu (Mobile) -->
+          <button id="menu-button" class="lg:hidden text-[#407CB9] text-3xl focus:outline-none ml-auto bg-white">
+            ☰
+          </button>
+          <!-- Hamburger Menu (Mobile) -->
+        </div>
+
+        <!-- Mobile Menu -->
+        <ul id="mobile-menu" class="hidden flex-col items-center bg-[#407CB9] text-white space-y-4 py-4 px-6 mt-4 lg:hidden absolute top-[70px] left-1/2 transform -translate-x-1/2 rounded-[20px] w-[90%] max-w-[300px] shadow-lg">
+          <li class="w-full text-center">
+            <a href="{{url_for('home')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Beranda</a>
+          </li>
+          <li class="w-full text-center">
+            <a href="{{url_for('detection')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] outline outline-2 outline-white w-full">Deteksi Penyakit Katup</a>
+          </li>
+          <li class="w-full text-center">
+            <a href="{{url_for('about')}}" class="block px-4 py-2 rounded-[20px] bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Tentang Kami</a>
+          </li>
+          <li class="w-full text-center">
+            <a href="{{url_for('logout')}}" class="block px-4 py-2 rounded-[20px] hover:bg-[#407CB9] hover:outline hover:outline-2 hover:outline-white w-full">Logout</a>
+          </li>
+        </ul>
+        <!-- Mobile Menu -->
+      </nav>
+      <!-- [END] Navbar -->
+
+      <!-- [START] Bagian Upload & Preview Video -->
+      <div class="container mx-auto px-5 py-16 mt-4">
+
+        <!-- [START] Judul -->
+        <h1 id="uploadTitle" class="lg:text-4xl text-2xl font-bold text-center text-black mb-6">
+          Unggah Video Ekokardiografi Doppler
+        </h1>
+        <!-- [END] Judul -->
+
+        <!-- [START] Wrapper Utama -->
+        <div class="flex flex-col items-center justify-center w-full">
+
+          <!-- [START] Form Upload (tampilkan hanya jika belum ada video) -->
+          {% if not video_url %}
+            <form id="uploadForm" action="/detection" method="POST" enctype="multipart/form-data">
+              <!-- [START] Upload Box -->
+              <div id="uploadBox" class="w-full h-full rounded-[25px] shadow-2xl border-2 border-[#407CB9] bg-white flex items-center justify-center p-4 md:p-6">
+                <label for="videoUpload" class="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                  <img src="{{ url_for('static', filename='img/Video_Upload_Icon.png') }}" alt="Upload Icon" class="w-20 md:w-28">
+                  <span class="text-gray-500 mt-2 text-sm md:text-lg font-base drop-shadow-lg text-center">
+                    Telusuri video ekokardiografi Doppler Anda dengan mengklik logo upload
+                  </span>
+                  <span class="text-red-500 italic text-xs md:text-sm mt-1 text-center">
+                    (*hanya menerima format MP4, AVI, MOV)
+                  </span>
+                </label>
+
+                <input id="videoUpload" type="file" name="videofile"
+                       accept="video/mp4,video/x-msvideo,video/quicktime"
+                       class="hidden"
+                       onchange="document.getElementById('uploadForm').submit();">
+              </div>
+              <!-- [END] Upload Box -->
+            </form>
+
+            <!-- [START] Loader spinner -->
+            <div id="loadingSpinner" class="hidden mt-4 flex items-center justify-center">
+              <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+              </svg>
+              <span class="ml-2 text-blue-600 text-sm font-medium">Mengunggah video...</span>
+            </div>
+            <!-- [END] Loader spinner -->
+
+          {% endif %}
+          <!-- [END] Form Upload (tampilkan hanya jika belum ada video) -->
+
+          <!-- [START] Video yang Berhasil diupload -->
+          {% if video_url %}
+            <!-- [START] Preview Video -->
+            <div id="videoPreview" class="mt-6 w-full max-w-2xl rounded-xl overflow-hidden shadow-lg border border-gray-300">
+              <video controls loop preload="metadata" class="w-full max-h-[60vh] object-contain bg-black rounded-[25px] shadow-2xl">
+                <source src="{{ video_url }}" type="video/mp4">
+                Browser Anda tidak mendukung tag video.
+              </video>
+              <div class="p-2 text-center text-sm text-green-600">✅ Video ekokardiografi berhasil diunggah!</div>
+              <div class="flex justify-center items-center gap-4 pb-4">
+                <button id="predictButton" type="button" form="uploadForm" class="predict-button text-xs lg:text-sm text-[#407CB9] px-3 py-2 rounded-[20px] bg-white outline outline-2 outline-[#407CB9] hover:bg-[#407CB9] hover:text-white shadow-lg transition cursor-pointer" onclick="showPrediction()">
+                  🔎 Lanjut Deteksi
+                </button>
+                <button class="text-xs lg:text-sm text-[#407CB9] px-3 py-2 rounded-[20px] bg-white outline outline-2 outline-[#407CB9] hover:bg-[#407CB9] hover:text-white shadow-lg transition cursor-pointer" onclick="resetUpload()">
+                  🔃 Ganti Video
+                </button>
+              </div>
+            </div>
+            <!-- [END] Preview Video -->
+
+            <!-- [START] Hasil Prediksi -->
+            <div id="predictionResult" class="mt-6 w-full max-w-2xl rounded-xl overflow-hidden shadow-lg border border-gray-300 hidden bg-white p-6">
+              <h3 class="text-xl font-semibold text-center text-gray-700 mb-4">🩺 Hasil Deteksi</h3>
+
+              <p class="text-lg text-center text-blue-600 font-bold mb-6">
+                Prediksi: <span id="predictedClass">-</span>
+              </p>
+
+              <div>
+                <p class="text-sm text-gray-600 mb-2 font-semibold">Probabilitas Kelas:</p>
+                <ul class="space-y-4">
+
+                  <!-- [START] MR -->
+                  <li class="flex items-center gap-4">
+                    <span class="w-16 font-medium text-gray-700">MR</span>
+                    <div class="flex-1 bg-gray-200 rounded-full h-4 overflow-hidden">
+                      <div id="barMR" class="bg-blue-500 h-4 rounded-full transition-width duration-500 ease-in-out" style="width: 7.54%;"></div>
+                    </div>
+                    <span id="scoreMR" class="w-12 text-right font-mono text-sm text-gray-800">-</span>
+                  </li>
+                  <!-- [END] MR -->
+
+                  <!-- [START] MS -->
+                  <li class="flex items-center gap-4">
+                    <span class="w-16 font-medium text-gray-700">MS</span>
+                    <div class="flex-1 bg-gray-200 rounded-full h-4 overflow-hidden">
+                      <div id="barMS" class="bg-blue-500 h-4 rounded-full transition-width duration-500 ease-in-out" style="width: 89.46%;"></div>
+                    </div>
+                    <span id="scoreMS" class="w-12 text-right font-mono text-sm text-gray-800">-</span>
+                  </li>
+                  <!-- [END] MS -->
+
+                  <!-- [START] Normal -->
+                  <li class="flex items-center gap-4">
+                    <span class="w-16 font-medium text-gray-700">Normal</span>
+                    <div class="flex-1 bg-gray-200 rounded-full h-4 overflow-hidden">
+                      <div id="barNormal" class="bg-blue-500 h-4 rounded-full transition-width duration-500 ease-in-out" style="width: 3%;"></div>
+                    </div>
+                    <span id="scoreNormal" class="w-12 text-right font-mono text-sm text-gray-800">-</span>
+                  </li>
+                  <!-- [END] Normal -->
+
+                </ul>
+
+                <!-- [START] Top-K Frames -->
+                <div class="mt-8">
+                  <h4 class="text-lg font-semibold text-center text-gray-700 mb-4">🎞️ Frame Terpilih (Top-K) dengan Skor Attention</h4>
+                  <div id="topKFrames" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+                </div>
+                <!-- [END] Top-K Frames -->
+              </div>
+
+            </div>
+            <!-- [END] Hasil Prediksi -->
+          {% endif %}
+          <!-- [END] Video yang Berhasil diupload -->
+
+        </div>
+        <!-- [END] Wrapper Utama -->
+
+      </div>
+      <!-- [END] Bagian Upload & Preview Video -->
+
+    </div>
+    <!-- [END] Jumbotron  -->
+
+  </div>
+
+  <!-- [START] Footer -->
+  <footer class="bg-[#407CB9] text-base lg:text-lg font-bold text-center text-white px-10 py-5">
+    DopplerSense
+  </footer>
+  <!-- [END] Footer -->
+
+
+  <script>
+    document.getElementById("menu-button").addEventListener("click", function () {
+        let mobileMenu = document.getElementById("mobile-menu");
+        mobileMenu.classList.toggle("hidden");
+    });
+
+    window.addEventListener("click", function (e) {
+        let menu = document.getElementById("mobile-menu");
+        let button = document.getElementById("menu-button");
+        if (!menu.contains(e.target) && !button.contains(e.target)) {
+            menu.classList.add("hidden");
+        }
+    });
+
+    window.addEventListener("scroll", function () {
+        const navbar = document.getElementById("navbar");
+        const menuButton = document.getElementById("menu-button");
+
+        if (window.scrollY > 30) {
+            navbar.classList.add("bg-[#407CB9]/30", "backdrop-blur-md");
+            navbar.classList.remove("bg-transparent");
+
+            // Hapus bg-white dari hamburger menu
+            menuButton.classList.remove("bg-white");
+        } else {
+            navbar.classList.add("bg-transparent");
+            navbar.classList.remove("bg-[#407CB9]/30", "backdrop-blur-md");
+
+            // Tambahkan bg-white kembali ke hamburger menu
+            menuButton.classList.add("bg-white");
+        }
+    });
+  </script>
+
+  <script>
+    function resetUpload() {
+      window.location.href = "/reset_upload";
+    }
+
+    const videoInput = document.getElementById("videoUpload");
+    if (videoInput) {
+      videoInput.addEventListener("change", function () {
+        const file = this.files[0];
+        const allowedTypes = ['video/mp4', 'video/x-msvideo', 'video/quicktime'];
+
+        if (file && allowedTypes.includes(file.type)) {
+          document.getElementById("loadingSpinner").classList.remove("hidden");
+
+          setTimeout(() => {
+            document.getElementById("uploadForm").submit();
+          }, 1000);
+        } else {
+          alert("Format file tidak didukung. Harap unggah MP4, AVI, atau MOV.");
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function showPrediction() {
+      const button = event.currentTarget;
+      button.disabled = true;
+      button.innerHTML = `<span class="spinner"></span> Mendeteksi...`;
+
+      fetch('/predict_video', {
+        method: 'POST'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert("❌ " + data.error);
+          return;
+        }
+
+        // Tampilkan prediksi utama
+        document.getElementById('predictedClass').textContent = data.predicted_class;
+
+        // Update setiap bar + skor
+        const updateBar = (idBar, idScore, value) => {
+          document.getElementById(idBar).style.width = `${(value * 100).toFixed(2)}%`;
+          document.getElementById(idScore).textContent = value.toFixed(4);
+        };
+
+        updateBar('barMR', 'scoreMR', data.probabilities.MR);
+        updateBar('barMS', 'scoreMS', data.probabilities.MS);
+        updateBar('barNormal', 'scoreNormal', data.probabilities.Normal);
+
+        // Tampilkan top-k frame dengan attention
+        const framesContainer = document.getElementById('topKFrames');
+        framesContainer.innerHTML = ''; // clear dulu
+        data.top_k_frames.forEach((b64, i) => {
+          const score = data.attention_scores[i];
+          const frameBox = document.createElement('div');
+          frameBox.className = "rounded-lg overflow-hidden shadow border border-gray-300 p-2 bg-gray-50";
+          frameBox.innerHTML = `
+            <img src="data:image/png;base64,${b64}" alt="Frame ${i}" class="w-full h-auto rounded">
+            <div class="mt-1 text-center text-sm text-gray-700 font-medium">
+              Frame ${i}<br><span class="w-12 text-center font-mono text-sm text-gray-800">Skor: ${score.toFixed(2)}</span>
+            </div>
+          `;
+          framesContainer.appendChild(frameBox);
+        });
+
+        // Tampilkan div hasil
+        document.getElementById('predictionResult').classList.remove('hidden');
+
+      })
+      .catch(err => {
+        alert("❌ Gagal melakukan prediksi.");
+        console.error(err);
+      })
+      .finally(() => {
+        button.disabled = false;
+        button.innerHTML = `🔎 Lanjut Deteksi`;
+      });
+    }
+  </script>
+
+</body>
+</html>
